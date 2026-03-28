@@ -1,0 +1,22 @@
+{
+    "Login": {
+        "title": "Iniciar sesión",
+        "subtitle": "Ingresa tus credenciales para acceder a tu cuenta",
+        "emailLabel": "Correo electrónico",
+        "emailPlaceholder": "correo@gmail.com",
+        "passwordLabel": "Contraseña",
+        "passwordPlaceholder": "●●●●●●●●",
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "buttonSubmit": "Entrar",
+        "loading": "Cargando...",
+        "messageSuccess": {
+            "title": "Login exitoso",
+            "subtitle": "Has ingresado correctamente a tu cuenta."
+        },
+        "messageError": {
+            "title": "Error de autenticación",
+            "subtitle": "Correo o contraseña incorrectos."
+        },
+        "errorGeneric": "Ocurrió un error durante el login"
+    }
+}
