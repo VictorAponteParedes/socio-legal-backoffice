@@ -9,8 +9,8 @@ type User = {
   id: string;
   email: string;
   name: string;
-  lastName: string;
-  role: "admin" | "bishop" | "clerk";
+  lastname: string;
+  role: "client" | "lawyer" | "admin" | "super_admin";
 };
 
 type AuthState = {
@@ -30,24 +30,20 @@ export const useAuth = create<AuthState>()(
 
       login: async (email: string, password: string): Promise<boolean> => {
         try {
-          const data = await authService.login(email, password); // ← aquí usamos tu service
-          const { accessToken } = data;
-
-          // Decodificamos el payload del JWT
-          const payload = JSON.parse(atob(accessToken.split(".")[1]));
+          const data = await authService.login(email, password);
+          const { token, user: userData } = data;
 
           set({
-            token: accessToken,
+            token,
             user: {
-              id: payload.sub,
-              email: payload.email,
-              role: payload.role,
-              name: payload.name,
-              lastName: payload.lastName,
+              id: userData.id,
+              email: userData.email,
+              role: userData.role,
+              name: userData.name,
+              lastname: userData.lastname,
             },
             isAuthenticated: true,
           });
-          console.log("User logged in:", payload);
           return true;
         } catch (error) {
           set({ user: null, token: null, isAuthenticated: false });
