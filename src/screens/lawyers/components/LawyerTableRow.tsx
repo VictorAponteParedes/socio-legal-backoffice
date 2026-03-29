@@ -4,6 +4,9 @@ import { Star, ChevronRight, MapPin } from "lucide-react";
 import { StatusBadge } from "@/components/StatusBadge";
 import type { Lawyer } from "../types";
 
+import { useNavigate } from "react-router-dom";
+import { RoutesView } from "@/navigation/routes";
+
 interface Props {
   lawyer: Lawyer;
   index: number;
@@ -13,12 +16,18 @@ export const LawyerTableRow = ({ lawyer, index }: Props) => {
   const { user, rating, isAvailable, specializations } = lawyer;
   const fullName = `${user.name} ${user.lastname}`;
   const initials = `${user.name.charAt(0)}${user.lastname.charAt(0)}`.toUpperCase();
+  const navigate = useNavigate();
+
+  const handleGoToDetail = () => {
+    navigate(`${RoutesView.LAWYERS}/${lawyer.id}`);
+  };
 
   return (
     <motion.tr
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay: index * 0.03 }}
+      onClick={handleGoToDetail}
       className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
     >
       {/* Abogado Info */}
