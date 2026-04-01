@@ -9,6 +9,8 @@ export const RoutesView = {
   USERS: "/users",
   LAWYERS: "/lawyers",
   LAWYERS_DETAIL: "/lawyers/:id",
+  CLIENTS: "/clients",
+  CLIENTS_DETAIL: "/clients/:id",
   CASES: "/cases",
   ROLES: "/roles",
   SETTINGS: "/settings",

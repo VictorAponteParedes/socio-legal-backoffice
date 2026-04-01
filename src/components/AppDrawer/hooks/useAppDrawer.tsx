@@ -9,6 +9,7 @@ import {
   Settings,
   BarChart3,
   ShieldCheck,
+  UserSquare,
 } from "lucide-react";
 import { RoutesView } from "@/navigation/routes";
 import type { NavSection } from "../types";
@@ -41,6 +42,11 @@ const NAV_SECTIONS: NavSection[] = [
         label: "Abogados",
         path: RoutesView.LAWYERS,
         icon: <Briefcase size={20} />,
+      },
+      {
+        label: "Clientes",
+        path: RoutesView.CLIENTS,
+        icon: <UserSquare size={20} />,
       },
       {
         label: "Casos",

@@ -7,11 +7,13 @@ import LoginPage from "../screens/auth/login/index"
 import NotFound from "../screens/notFound/index";
 
 import { DASHBOARD_ROUTES } from "../screens/dasboard/routes";
+import { CLIENTS_ROUTES } from "../screens/clients/routes";
 import { LAWYERS_ROUTES } from "../screens/lawyers/routes";
 
 // Todas las rutas privadas (con lazy + ProtectedRoute automático)
 const PRIVATE_ROUTES = [
   ...DASHBOARD_ROUTES,
+  ...CLIENTS_ROUTES,
   ...LAWYERS_ROUTES,
 ];
 
