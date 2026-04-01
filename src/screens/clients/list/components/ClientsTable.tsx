@@ -1,5 +1,5 @@
 // src/screens/clients/list/components/ClientsTable.tsx
-import { Eye, Mail, Phone, MapPin } from "lucide-react";
+import { ChevronRight, Mail, Phone, MapPin } from "lucide-react";
 import { StatusBadge } from "@/components/StatusBadge";
 import { getMediaUrl } from "@/helper/media";
 import type { Client } from "../../types";
@@ -71,7 +71,8 @@ export const ClientsTable = ({ clients, onViewDetail }: ClientsTableProps) => {
             return (
               <tr
                 key={client.id}
-                className="hover:bg-slate-50 transition-colors group"
+                onClick={() => onViewDetail(client)}
+                className="hover:bg-slate-50 transition-colors group cursor-pointer"
               >
                 {/* Avatar + nombre */}
                 <td className="py-3.5 px-4">
@@ -143,14 +144,12 @@ export const ClientsTable = ({ clients, onViewDetail }: ClientsTableProps) => {
                 <td className="py-3.5 px-4 text-slate-500">{date}</td>
 
                 {/* Acciones */}
-                <td className="py-3.5 px-4">
-                  <button
-                    onClick={() => onViewDetail(client)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg"
-                  >
-                    <Eye size={13} />
-                    Ver detalle
-                  </button>
+                <td className="py-3.5 px-4 text-right">
+                  <div className="flex items-center justify-end">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-300 group-hover:text-indigo-600 group-hover:bg-indigo-50 transition-all duration-300 transform group-hover:translate-x-1">
+                      <ChevronRight size={22} />
+                    </div>
+                  </div>
                 </td>
               </tr>
             );

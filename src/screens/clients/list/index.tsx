@@ -5,9 +5,10 @@ import { useClientFilters } from "./hooks/useClientFilters";
 import { ClientsSearchBar } from "./components/ClientsSearchBar";
 import { ClientsStatsBar } from "./components/ClientsStatsBar";
 import { ClientsTable } from "./components/ClientsTable";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const ClientsList = () => {
-  const { clients, isLoading, error, handleViewDetail, refetch } = useClientsList();
+  const { clients, totalPages, currentPage, setPage, isLoading, error, handleViewDetail, refetch } = useClientsList();
 
   const {
     search,
@@ -72,6 +73,49 @@ const ClientsList = () => {
             </div>
           ) : (
             <ClientsTable clients={filtered} onViewDetail={handleViewDetail} />
+          )}
+
+          {/* Controls de Paginación */}
+          {!isLoading && totalPages > 1 && (
+            <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50">
+              <span className="text-sm font-medium text-slate-500">
+                Página <span className="text-slate-700 font-bold">{currentPage}</span> de <span className="text-slate-700 font-bold">{totalPages}</span>
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="p-2 rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <div className="flex gap-1">
+                  {[...Array(totalPages)].map((_, i) => {
+                    const page = i + 1;
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setPage(page)}
+                        className={`w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition-colors ${
+                          currentPage === page
+                            ? "bg-indigo-600 text-white shadow-sm"
+                            : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  })}
+                </div>
+                <button
+                  onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="p-2 rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>

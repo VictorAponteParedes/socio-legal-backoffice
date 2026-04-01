@@ -7,11 +7,14 @@ const clientsService = new ClientsService();
 
 interface ClientsState {
   clients: Client[];
+  totalClients: number;
+  currentPage: number;
+  totalPages: number;
   selectedClient: Client | null;
   isLoading: boolean;
   isUpdatingStatus: boolean;
   error: string | null;
-  fetchClients: (token: string) => Promise<void>;
+  fetchClients: (token: string, page?: number, limit?: number) => Promise<void>;
   fetchClient: (id: string, token: string) => Promise<void>;
   updateClientStatus: (id: string, status: "active" | "inactive" | "suspended" | "pending", token: string) => Promise<void>;
   clearSelected: () => void;
@@ -19,16 +22,25 @@ interface ClientsState {
 
 export const useClientsStore = create<ClientsState>((set) => ({
   clients: [],
+  totalClients: 0,
+  currentPage: 1,
+  totalPages: 1,
   selectedClient: null,
   isLoading: false,
   isUpdatingStatus: false,
   error: null,
 
-  fetchClients: async (token: string) => {
+  fetchClients: async (token: string, page = 1, limit = 10) => {
     set({ isLoading: true, error: null });
     try {
-      const clients = await clientsService.findAll(token);
-      set({ clients, isLoading: false });
+      const response = await clientsService.findAll(token, page, limit);
+      set({ 
+        clients: response.data, 
+        totalClients: response.total,
+        currentPage: response.page,
+        totalPages: response.totalPages,
+        isLoading: false 
+      });
     } catch {
       set({ error: "Error al cargar los clientes", isLoading: false });
     }

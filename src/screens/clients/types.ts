@@ -23,3 +23,11 @@ export interface Client {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PaginatedClients {
+  data: Client[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}

@@ -1,10 +1,10 @@
 // src/screens/clients/service/clients.service.ts
 import { axiosInstance } from "@/constants";
-import type { Client } from "../types";
+import type { Client, PaginatedClients } from "../types";
 
 export class ClientsService {
-  async findAll(token: string): Promise<Client[]> {
-    const response = await axiosInstance.get("/clients", {
+  async findAll(token: string, page: number = 1, limit: number = 10): Promise<PaginatedClients> {
+    const response = await axiosInstance.get(`/clients?page=${page}&limit=${limit}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
