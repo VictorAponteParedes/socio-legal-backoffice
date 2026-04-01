@@ -5,6 +5,7 @@ export interface NavItem {
   path: string;
   icon: React.ReactNode;
   badge?: number;
+  subItems?: NavItem[];
 }
 
 export interface NavSection {
@@ -32,7 +33,7 @@ export interface DrawerHeaderProps {
 export interface DrawerNavItemProps {
   item: NavItem;
   isActive: boolean;
-  onClick: () => void;
+  onNavigate: (path: string) => void;
 }
 
 export interface DrawerOverlayProps {

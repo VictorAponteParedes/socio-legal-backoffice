@@ -11,6 +11,7 @@ import { CLIENTS_ROUTES } from "../screens/clients/routes";
 import { LAWYERS_ROUTES } from "../screens/lawyers/routes";
 import { CASES_ROUTES } from "../screens/cases/routes";
 import { USERS_ROUTES } from "../screens/users/routes";
+import { SPECIALIZATIONS_ROUTES } from "../screens/specializations/routes";
 
 // Todas las rutas privadas (con lazy + ProtectedRoute automático)
 const PRIVATE_ROUTES = [
@@ -19,6 +20,7 @@ const PRIVATE_ROUTES = [
   ...LAWYERS_ROUTES,
   ...CASES_ROUTES,
   ...USERS_ROUTES,
+  ...SPECIALIZATIONS_ROUTES,
 ];
 
 export default function AppRoutes() {

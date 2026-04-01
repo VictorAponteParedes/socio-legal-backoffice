@@ -10,6 +10,7 @@ import {
   BarChart3,
   ShieldCheck,
   UserSquare,
+  Scale,
 } from "lucide-react";
 import { RoutesView } from "@/navigation/routes";
 import type { NavSection } from "../types";
@@ -28,20 +29,32 @@ const NAV_SECTIONS: NavSection[] = [
         path: RoutesView.REPORTS,
         icon: <BarChart3 size={20} />,
       },
+      {
+        label: "Usuarios",
+        path: RoutesView.USERS,
+        icon: <Users size={20} />,
+      },
     ],
   },
   {
     title: "Gestión",
     items: [
       {
-        label: "Usuarios",
-        path: RoutesView.USERS,
-        icon: <Users size={20} />,
-      },
-      {
         label: "Abogados",
         path: RoutesView.LAWYERS,
         icon: <Briefcase size={20} />,
+        subItems: [
+          {
+            label: "Listado de Abogados",
+            path: RoutesView.LAWYERS,
+            icon: <Briefcase size={16} />,
+          },
+          {
+            label: "Especializaciones",
+            path: RoutesView.SPECIALIZATIONS,
+            icon: <Scale size={16} />,
+          },
+        ],
       },
       {
         label: "Clientes",

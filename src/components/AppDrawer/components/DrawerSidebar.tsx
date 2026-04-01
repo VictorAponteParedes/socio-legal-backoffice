@@ -19,7 +19,7 @@ export const DrawerSidebar = ({
         animate={{ width: isOpen ? DRAWER_WIDTH : 0, opacity: isOpen ? 1 : 0 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className="fixed top-0 left-0 h-full z-30 overflow-hidden
-                   md:relative md:flex-shrink-0"
+                   md:relative md:shrink-0"
         style={{ minWidth: 0 }}
       >
         <div
@@ -65,7 +65,7 @@ export const DrawerSidebar = ({
                       key={item.path}
                       item={item}
                       isActive={activePath === item.path}
-                      onClick={() => onNavigate(item.path)}
+                      onNavigate={onNavigate}
                     />
                   ))}
                 </div>

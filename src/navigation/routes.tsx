@@ -15,4 +15,5 @@ export const RoutesView = {
   CASES_DETAIL: "/admin/casos/:id",
   ROLES: "/roles",
   SETTINGS: "/settings",
+  SPECIALIZATIONS: "/admin/abogados/especializaciones",
 };
