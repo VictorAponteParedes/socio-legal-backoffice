@@ -6,14 +6,13 @@ export const RoutesView = {
   // Privadas
   DASHBOARD: "/dashboard",
   REPORTS: "/reports",
-  USERS: "/users",
+  USERS: "/admin/usuarios",
   LAWYERS: "/lawyers",
   LAWYERS_DETAIL: "/lawyers/:id",
   CLIENTS: "/clients",
   CLIENTS_DETAIL: "/clients/:id",
-  CASES: "/cases",
-  CASES_DETAIL: "/cases/:id",
+  CASES: "/admin/casos",
+  CASES_DETAIL: "/admin/casos/:id",
   ROLES: "/roles",
   SETTINGS: "/settings",
 };
-

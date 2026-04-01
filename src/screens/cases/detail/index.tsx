@@ -7,6 +7,7 @@ import { RoutesView } from "@/navigation/routes";
 import { motion } from "framer-motion";
 import { StatusBadge } from "@/components/StatusBadge";
 import { formatCurrency } from "@/helper/currency";
+import { CaseProgressTimeline } from "./components/CaseProgressTimeline";
 
 const getInitials = (name: string, lastname: string) =>
   `${name?.charAt(0) || ""}${lastname?.charAt(0) || ""}`.toUpperCase() || "CL";
@@ -129,6 +130,9 @@ const CaseDetailPage = () => {
                 </p>
               </div>
             </div>
+
+            {/* Progreso de la resolución del Caso (Línea de tiempo) */}
+            <CaseProgressTimeline updates={caseItem.updates || []} />
 
             {/* Tarjeta del Cliente Originador */}
             <div className="bg-white rounded-4xl border border-slate-100 p-8 shadow-sm">

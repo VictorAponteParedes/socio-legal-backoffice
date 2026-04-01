@@ -17,6 +17,17 @@ export interface CaseLawyer {
   user: CaseUser;
 }
 
+export interface CaseUpdate {
+  id: string;
+  type: "NOTE" | "FILE" | "MEETING" | "MILESTONE";
+  title: string;
+  description?: string;
+  attachmentUrl?: string;
+  eventDate?: string;
+  createdAt: string;
+  lawyer: CaseLawyer;
+}
+
 export interface CaseProposal {
   id: number;
   message: string;
@@ -50,6 +61,7 @@ export interface Case {
   assignedLawyer?: CaseLawyer;
   proposals?: CaseProposal[];
   closure?: CaseClosure;
+  updates?: CaseUpdate[];
   createdAt: string;
   updatedAt: string;
 }
