@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { RoutesView } from "@/navigation/routes";
 import { motion } from "framer-motion";
 import { StatusBadge } from "@/components/StatusBadge";
+import { formatCurrency } from "@/helper/currency";
 
 const getInitials = (name: string, lastname: string) =>
   `${name?.charAt(0) || ""}${lastname?.charAt(0) || ""}`.toUpperCase() || "CL";
@@ -79,7 +80,7 @@ const CaseDetailPage = () => {
                 </div>
                 <div className="text-center border-l border-slate-50 group-hover:scale-105 transition-transform">
                   <p className="text-xl font-black text-slate-800 line-clamp-1">
-                    {caseItem.budget ? `$${caseItem.budget}` : "A Convenir"}
+                    {caseItem.budget ? formatCurrency(caseItem.budget) : "A Convenir"}
                   </p>
                   <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mt-1">Presupuesto</p>
                 </div>
@@ -192,7 +193,7 @@ const CaseDetailPage = () => {
                       </div>
                       <div className="flex items-center gap-4 shrink-0 px-2 lg:px-0">
                         <div className="text-right">
-                          <p className="font-bold text-sm text-slate-800 flex items-center gap-1"><Wallet size={14}/> ${proposal.proposedFee}</p>
+                          <p className="font-bold text-sm text-slate-800 flex items-center justify-end gap-1"><Wallet size={14}/> {formatCurrency(proposal.proposedFee)}</p>
                           <p className="text-xs text-slate-400">{proposal.estimatedDuration}</p>
                         </div>
                         <StatusBadge variant={proposal.status === "accepted" ? "success" : proposal.status === "rejected" ? "error" : "warning"}>
