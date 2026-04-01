@@ -23,22 +23,23 @@ const PRIVATE_ROUTES = [
   ...SPECIALIZATIONS_ROUTES,
 ];
 
+import { PrivateLayout } from "./PrivateLayout";
+
 export default function AppRoutes() {
   return (
     <Routes>
       {/* RUTAS PÚBLICAS */}
       <Route path={RoutesView.LOGIN} element={<LoginPage />} />
       <Route path="/" element={<Navigate to={RoutesView.DASHBOARD} replace />} />
-      <Route path="*" element={<NotFound />} />
 
-      {/* TODAS LAS RUTAS PRIVADAS (lazy + protegidas en un solo lugar) */}
-      {PRIVATE_ROUTES.map((route) => (
-        <Route
-          key={route.path}
-          path={route.path}
-          element={<ProtectedRoute>{route.element}</ProtectedRoute>}
-        />
-      ))}
+      {/* RUTAS PRIVADAS (Con layout persistente que envuelve a todas) */}
+      <Route element={<PrivateLayout />}>
+        {PRIVATE_ROUTES.map((route) => (
+          <Route key={route.path} path={route.path} element={route.element} />
+        ))}
+      </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
