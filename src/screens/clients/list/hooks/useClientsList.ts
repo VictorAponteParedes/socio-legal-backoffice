@@ -17,9 +17,13 @@ export const useClientsList = () => {
     }
   }, [token, fetchClients]);
 
+  const refetch = () => {
+    if (token) fetchClients(token);
+  };
+
   const handleViewDetail = (client: Client) => {
     navigate(RoutesView.CLIENTS_DETAIL.replace(":id", client.id));
   };
 
-  return { clients, isLoading, error, handleViewDetail };
+  return { clients, isLoading, error, refetch, handleViewDetail };
 };
