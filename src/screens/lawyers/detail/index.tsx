@@ -2,7 +2,7 @@
 import { useLawyerDetail } from "./hooks/useLawyerDetail";
 import { LawyerSensitiveData } from "./components/LawyerSensitiveData";
 import { StatusBadge } from "@/components/StatusBadge";
-import { ArrowLeft, Mail, Phone, MapPin, Briefcase, Star, Calendar, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Mail, MapPin, Briefcase, Star, Calendar, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { RoutesView } from "@/navigation/routes";
 import { motion } from "framer-motion";
@@ -97,7 +97,7 @@ const LawyerDetailPage = () => {
           <LawyerSensitiveData />
 
           {/* Perfil Profesional */}
-          <div className="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm">
+          <div className="bg-white rounded-4xl border border-slate-100 p-8 shadow-sm">
             <div className="flex items-center gap-4 mb-8">
               <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500">
                 <Briefcase size={20} />

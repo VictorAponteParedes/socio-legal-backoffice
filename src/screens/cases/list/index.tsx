@@ -5,6 +5,7 @@ import { CasesSearchBar } from "./components/CasesSearchBar";
 import { CasesStatsBar } from "./components/CasesStatsBar";
 import { CasesTable } from "./components/CasesTable";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ListSkeleton } from "@/components/ListSkeleton";
 
 const CasesList = () => {
   const {
@@ -17,6 +18,8 @@ const CasesList = () => {
   } = useCaseFilters();
 
   const { cases, totalPages, currentPage, totalCases, setPage, isLoading, error, handleViewDetail, refetch } = useCasesList(search, statusFilter);
+
+  if (isLoading) return <ListSkeleton rows={8} />;
 
   return (
     <div className="space-y-6">
@@ -52,22 +55,10 @@ const CasesList = () => {
           </div>
         )}
 
-        {/* Skeleton loading */}
-        {isLoading ? (
-          <div className="p-6 space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className="h-12 bg-slate-100 rounded-xl animate-pulse"
-              />
-            ))}
-          </div>
-        ) : (
-          <CasesTable cases={cases} onViewDetail={handleViewDetail} />
-        )}
+        <CasesTable cases={cases} onViewDetail={handleViewDetail} />
 
         {/* Controls de Paginación */}
-        {!isLoading && totalPages > 1 && (
+        {totalPages > 1 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50">
             <span className="text-sm font-medium text-slate-500">
               Página <span className="text-slate-700 font-bold">{currentPage}</span> de <span className="text-slate-700 font-bold">{totalPages}</span>

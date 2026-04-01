@@ -1,7 +1,6 @@
 // src/navigation/AppRoutes.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import { RoutesView } from "./routes";
-import { ProtectedRoute } from "./ProtectedRoute";
 
 import LoginPage from "../screens/auth/login/index"
 import NotFound from "../screens/notFound/index";

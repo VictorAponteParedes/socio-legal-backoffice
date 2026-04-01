@@ -4,6 +4,7 @@ import { useLawyerFilters } from "./hooks/useLawyerFilters";
 import { LawyersSearchBar } from "./components/LawyersSearchBar";
 import { LawyersStatsBar } from "./components/LawyersStatsBar";
 import { LawyerTable } from "./components/LawyerTable";
+import { ListSkeleton } from "@/components/ListSkeleton";
 
 const LawyersPage = () => {
   const { lawyers, isLoading, error, refetch } = useLawyers();
@@ -20,6 +21,8 @@ const LawyersPage = () => {
     clearFilters,
     hasActiveFilters,
   } = useLawyerFilters({ lawyers });
+
+  if (isLoading) return <ListSkeleton rows={8} />;
 
   return (
     <div className="space-y-6">

@@ -5,6 +5,7 @@ import { ClientsSearchBar } from "./components/ClientsSearchBar";
 import { ClientsStatsBar } from "./components/ClientsStatsBar";
 import { ClientsTable } from "./components/ClientsTable";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ListSkeleton } from "@/components/ListSkeleton";
 
 const ClientsList = () => {
   const {
@@ -20,6 +21,8 @@ const ClientsList = () => {
   } = useClientFilters({ clients: [] });
 
   const { clients, totalPages, currentPage, totalClients, setPage, isLoading, error, handleViewDetail, refetch } = useClientsList(search, cityFilter, activeOnly);
+
+  if (isLoading) return <ListSkeleton rows={8} />;
 
   return (
     <div className="space-y-6">
@@ -56,20 +59,9 @@ const ClientsList = () => {
           </div>
         )}
 
-        {isLoading ? (
-          <div className="p-6 space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className="h-12 bg-slate-100 rounded-xl animate-pulse"
-              />
-            ))}
-          </div>
-        ) : (
-          <ClientsTable clients={clients} onViewDetail={handleViewDetail} />
-        )}
+        <ClientsTable clients={clients} onViewDetail={handleViewDetail} />
 
-        {!isLoading && totalPages > 1 && (
+        {totalPages > 1 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50">
             <span className="text-sm font-medium text-slate-500">
               Página <span className="text-slate-700 font-bold">{currentPage}</span> de <span className="text-slate-700 font-bold">{totalPages}</span>

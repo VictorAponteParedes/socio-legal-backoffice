@@ -6,6 +6,7 @@ import { UsersStatsBar } from "./components/UsersStatsBar";
 import { UsersTable } from "./components/UsersTable";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { User } from "../types";
+import { ListSkeleton } from "@/components/ListSkeleton";
 
 const UsersList = () => {
   const {
@@ -25,6 +26,8 @@ const UsersList = () => {
     // Navigate or open modal depending on future plans
     console.log("View user detail:", user.id);
   };
+
+  if (isLoading) return <ListSkeleton rows={8} />;
 
   return (
     <div className="space-y-6">
@@ -60,20 +63,9 @@ const UsersList = () => {
           </div>
         )}
 
-        {isLoading ? (
-          <div className="p-6 space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className="h-12 bg-slate-100 rounded-xl animate-pulse"
-              />
-            ))}
-          </div>
-        ) : (
-          <UsersTable users={users} onViewDetail={handleViewDetail} />
-        )}
+        <UsersTable users={users} onViewDetail={handleViewDetail} />
 
-        {!isLoading && totalPages > 1 && (
+        {totalPages > 1 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50">
             <span className="text-sm font-medium text-slate-500">
               Página <span className="text-slate-700 font-bold">{currentPage}</span> de <span className="text-slate-700 font-bold">{totalPages}</span>
