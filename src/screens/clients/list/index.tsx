@@ -8,8 +8,7 @@ import { ClientsTable } from "./components/ClientsTable";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const ClientsList = () => {
-  const { clients, totalPages, currentPage, setPage, isLoading, error, handleViewDetail, refetch } = useClientsList();
-
+  // 1. Filtros locales (sin filtrado agresivo usando clients)
   const {
     search,
     setSearch,
@@ -17,11 +16,13 @@ const ClientsList = () => {
     setCityFilter,
     activeOnly,
     setActiveOnly,
-    filtered,
     uniqueCities,
     clearFilters,
     hasActiveFilters,
-  } = useClientFilters({ clients });
+  } = useClientFilters({ clients: [] }); // uniqueCities en backoffice podría requerir endpoint separado en el futuro
+
+  // 2. Fetcher paginado inteligente (escucha los filtros)
+  const { clients, totalPages, currentPage, totalClients, setPage, isLoading, error, handleViewDetail, refetch } = useClientsList(search, cityFilter, activeOnly);
 
   return (
     <AppDrawer>
@@ -35,7 +36,7 @@ const ClientsList = () => {
 
         <ClientsStatsBar
           clients={clients}
-          filteredCount={filtered.length}
+          filteredCount={totalClients} // Ahora esto representa la cantidad REAL total de clientes que coinciden con el filtro
           isLoading={isLoading}
           onRefetch={refetch}
         />
@@ -72,7 +73,7 @@ const ClientsList = () => {
               ))}
             </div>
           ) : (
-            <ClientsTable clients={filtered} onViewDetail={handleViewDetail} />
+            <ClientsTable clients={clients} onViewDetail={handleViewDetail} />
           )}
 
           {/* Controls de Paginación */}

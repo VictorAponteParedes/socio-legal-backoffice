@@ -11,26 +11,7 @@ export const useClientFilters = ({ clients }: UseClientFiltersProps) => {
   const [cityFilter, setCityFilter] = useState("");
   const [activeOnly, setActiveOnly] = useState(false);
 
-  const filtered = useMemo(() => {
-    return clients.filter((client) => {
-      const fullName = `${client.user.name} ${client.user.lastname}`.toLowerCase();
-      const searchTerm = search.toLowerCase().trim();
-
-      const matchesSearch =
-        !searchTerm ||
-        fullName.includes(searchTerm) ||
-        (client.user.email?.toLowerCase().includes(searchTerm) ?? false) ||
-        (client.user.cedula?.toLowerCase().includes(searchTerm) ?? false);
-
-      const matchesCity =
-        !cityFilter ||
-        (client.city?.toLowerCase() ?? "").includes(cityFilter.toLowerCase());
-
-      const matchesActive = !activeOnly || client.user.status === "active";
-
-      return matchesSearch && matchesCity && matchesActive;
-    });
-  }, [clients, search, cityFilter, activeOnly]);
+  const filtered = clients;
 
   const uniqueCities = useMemo(() => {
     const cities = clients

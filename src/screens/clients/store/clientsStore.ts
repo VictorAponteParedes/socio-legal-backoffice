@@ -14,7 +14,7 @@ interface ClientsState {
   isLoading: boolean;
   isUpdatingStatus: boolean;
   error: string | null;
-  fetchClients: (token: string, page?: number, limit?: number) => Promise<void>;
+  fetchClients: (token: string, page?: number, limit?: number, search?: string, city?: string, status?: string) => Promise<void>;
   fetchClient: (id: string, token: string) => Promise<void>;
   updateClientStatus: (id: string, status: "active" | "inactive" | "suspended" | "pending", token: string) => Promise<void>;
   clearSelected: () => void;
@@ -30,10 +30,10 @@ export const useClientsStore = create<ClientsState>((set) => ({
   isUpdatingStatus: false,
   error: null,
 
-  fetchClients: async (token: string, page = 1, limit = 10) => {
+  fetchClients: async (token: string, page = 1, limit = 10, search?: string, city?: string, status?: string) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await clientsService.findAll(token, page, limit);
+      const response = await clientsService.findAll(token, page, limit, search, city, status);
       set({ 
         clients: response.data, 
         totalClients: response.total,
