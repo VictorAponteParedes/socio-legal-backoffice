@@ -9,12 +9,14 @@ import NotFound from "../screens/notFound/index";
 import { DASHBOARD_ROUTES } from "../screens/dasboard/routes";
 import { CLIENTS_ROUTES } from "../screens/clients/routes";
 import { LAWYERS_ROUTES } from "../screens/lawyers/routes";
+import { CASES_ROUTES } from "../screens/cases/routes";
 
 // Todas las rutas privadas (con lazy + ProtectedRoute automático)
 const PRIVATE_ROUTES = [
   ...DASHBOARD_ROUTES,
   ...CLIENTS_ROUTES,
   ...LAWYERS_ROUTES,
+  ...CASES_ROUTES,
 ];
 
 export default function AppRoutes() {

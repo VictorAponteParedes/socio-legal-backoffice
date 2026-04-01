@@ -12,6 +12,7 @@ export const RoutesView = {
   CLIENTS: "/clients",
   CLIENTS_DETAIL: "/clients/:id",
   CASES: "/cases",
+  CASES_DETAIL: "/cases/:id",
   ROLES: "/roles",
   SETTINGS: "/settings",
 };
