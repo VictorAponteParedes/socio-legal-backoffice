@@ -1,6 +1,6 @@
 // src/screens/cases/service/cases.service.ts
 import { axiosInstance } from "@/constants";
-import type { PaginatedCases } from "../types";
+import type { PaginatedCases, Case } from "../types";
 
 export class CasesService {
   async findAll(
@@ -19,6 +19,13 @@ export class CasesService {
     if (status) params.append("status", status);
 
     const response = await axiosInstance.get(`/cases?${params.toString()}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  }
+
+  async findOne(id: string, token: string): Promise<Case> {
+    const response = await axiosInstance.get(`/cases/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;

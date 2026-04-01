@@ -8,9 +8,12 @@ interface CasesState {
   totalCases: number;
   currentPage: number;
   totalPages: number;
+  selectedCase: Case | null;
   isLoading: boolean;
   error: string | null;
   fetchCases: (token: string, page?: number, limit?: number, search?: string, status?: string) => Promise<void>;
+  fetchCase: (id: string, token: string) => Promise<void>;
+  clearSelected: () => void;
 }
 
 export const useCasesStore = create<CasesState>((set) => ({
@@ -18,6 +21,7 @@ export const useCasesStore = create<CasesState>((set) => ({
   totalCases: 0,
   currentPage: 1,
   totalPages: 1,
+  selectedCase: null,
   isLoading: false,
   error: null,
 
@@ -36,4 +40,16 @@ export const useCasesStore = create<CasesState>((set) => ({
       set({ error: "Error al cargar los casos", isLoading: false });
     }
   },
+
+  fetchCase: async (id: string, token: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const caseItem = await casesService.findOne(id, token);
+      set({ selectedCase: caseItem, isLoading: false });
+    } catch {
+      set({ error: "Error al cargar el detalle del caso", isLoading: false });
+    }
+  },
+
+  clearSelected: () => set({ selectedCase: null }),
 }));

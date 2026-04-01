@@ -13,7 +13,27 @@ export interface CaseUser {
 export interface CaseLawyer {
   id: string;
   user_id: string;
+  license: string;
   user: CaseUser;
+}
+
+export interface CaseProposal {
+  id: number;
+  message: string;
+  proposedFee: number;
+  estimatedDuration: string;
+  status: string;
+  createdAt: string;
+  lawyer: CaseLawyer;
+}
+
+export interface CaseClosure {
+  id: string;
+  result: string;
+  closureReason: string;
+  clientComment?: string;
+  rating?: number;
+  closedAt: string;
 }
 
 export interface Case {
@@ -28,6 +48,8 @@ export interface Case {
   status: "pendiente" | "aceptado" | "cerrado";
   assignedLawyerId?: string;
   assignedLawyer?: CaseLawyer;
+  proposals?: CaseProposal[];
+  closure?: CaseClosure;
   createdAt: string;
   updatedAt: string;
 }
