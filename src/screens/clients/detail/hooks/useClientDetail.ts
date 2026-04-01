@@ -7,7 +7,7 @@ import { useAuth } from "@/store/authStore";
 export const useClientDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { token } = useAuth();
-  const { selectedClient, isLoading, error, fetchClient, clearSelected } = useClientsStore();
+  const { selectedClient, isLoading, isUpdatingStatus, error, fetchClient, updateClientStatus, clearSelected } = useClientsStore();
 
   useEffect(() => {
     if (token && id) {
@@ -16,5 +16,11 @@ export const useClientDetail = () => {
     return () => clearSelected();
   }, [id, token, fetchClient, clearSelected]);
 
-  return { client: selectedClient, isLoading, error };
+  const handleUpdateStatus = async (status: "active" | "inactive" | "suspended" | "pending") => {
+    if (id && token) {
+      await updateClientStatus(id, status, token);
+    }
+  };
+
+  return { client: selectedClient, isLoading, isUpdatingStatus, error, handleUpdateStatus };
 };

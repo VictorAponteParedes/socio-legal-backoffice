@@ -16,4 +16,11 @@ export class ClientsService {
     });
     return response.data;
   }
+
+  async updateStatus(id: string, status: string, token: string): Promise<Client> {
+    const response = await axiosInstance.patch(`/clients/${id}/status`, { status }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  }
 }

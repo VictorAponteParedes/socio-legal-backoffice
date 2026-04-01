@@ -3,15 +3,23 @@ import { AppDrawer } from "@/components/AppDrawer";
 import { useClientDetail } from "./hooks/useClientDetail";
 import { ClientSensitiveData } from "./components/ClientSensitiveData";
 import { StatusBadge } from "@/components/StatusBadge";
-import { ArrowLeft, Mail, Phone, MapPin, Calendar, ShieldCheck, User } from "lucide-react";
+import { ArrowLeft, Mail, Phone, MapPin, Calendar, ShieldCheck, User, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { RoutesView } from "@/navigation/routes";
 import { motion } from "framer-motion";
 import { getMediaUrl } from "@/helper/media";
+import { useState, useEffect } from "react";
 
 const ClientDetailPage = () => {
-  const { client, isLoading, error } = useClientDetail();
+  const { client, isLoading, isUpdatingStatus, error, handleUpdateStatus } = useClientDetail();
   const navigate = useNavigate();
+  const [selectedStatus, setSelectedStatus] = useState<"active" | "inactive" | "suspended" | "pending" | "">("");
+
+  useEffect(() => {
+    if (client) {
+      setSelectedStatus(client.user.status);
+    }
+  }, [client]);
 
   if (isLoading) return <AppDrawer><div className="flex items-center justify-center h-full text-slate-400 font-medium animate-pulse">Cargando perfil...</div></AppDrawer>;
   if (error || !client) return <AppDrawer><div className="p-8 text-center text-red-500 font-bold">{error || "Perfil no encontrado"}</div></AppDrawer>;
@@ -71,6 +79,42 @@ const ClientDetailPage = () => {
                   {client.user.status === "active" ? "Activo" : client.user.status === "pending" ? "Pendiente" : client.user.status === "suspended" ? "Suspendido" : "Inactivo"}
                 </StatusBadge>
               </div>
+
+              {/* Select de estado interactivo */}
+              <div className="mt-8 pt-8 border-t border-slate-50 text-left">
+                <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 text-center">
+                  Estado de la cuenta
+                </label>
+                <div className="flex gap-2">
+                  <select
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value as any)}
+                    disabled={isUpdatingStatus}
+                    className={`flex-1 min-w-0 pr-8 pl-4 py-2.5 rounded-xl border appearance-none text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500
+                      ${selectedStatus === "active" ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
+                        selectedStatus === "suspended" ? "bg-red-50 text-red-700 border-red-200" :
+                        selectedStatus === "pending" ? "bg-amber-50 text-amber-700 border-amber-200" :
+                        "bg-slate-100 text-slate-600 border-slate-200"
+                      }`}
+                  >
+                    <option value="pending">Pendiente de Aprobación</option>
+                    <option value="active">Activo y Verificado</option>
+                    <option value="inactive">Inactivo temporalmente</option>
+                    <option value="suspended">Cuenta Suspendida</option>
+                  </select>
+
+                  {selectedStatus !== client.user.status && (
+                    <button
+                      onClick={() => handleUpdateStatus(selectedStatus as any)}
+                      disabled={isUpdatingStatus}
+                      className="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 rounded-xl transition-all shadow-sm disabled:opacity-50 flex items-center justify-center gap-1.5 font-bold text-sm px-4"
+                    >
+                      <Save size={16} />
+                      Guardar
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Contacto */}
@@ -102,9 +146,6 @@ const ClientDetailPage = () => {
 
           {/* Detalles Técnicos y Sensibles (Derecha) */}
           <div className="lg:col-span-8 space-y-8">
-            {/* Sección de Datos Sensibles */}
-            <ClientSensitiveData />
-
             {/* Perfil del cliente */}
             <div className="bg-white rounded-4xl border border-slate-100 p-8 shadow-sm">
               <div className="flex items-center gap-4 mb-8">
@@ -133,6 +174,9 @@ const ClientDetailPage = () => {
                 </div>
               )}
             </div>
+
+            {/* Sección de Datos Sensibles (Hacia abajo) */}
+            <ClientSensitiveData />
           </div>
         </div>
       </motion.div>
