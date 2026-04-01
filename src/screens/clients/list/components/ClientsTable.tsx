@@ -1,6 +1,7 @@
 // src/screens/clients/list/components/ClientsTable.tsx
 import { Eye, Mail, Phone, MapPin } from "lucide-react";
 import { StatusBadge } from "@/components/StatusBadge";
+import { getMediaUrl } from "@/helper/media";
 import type { Client } from "../../types";
 
 interface ClientsTableProps {
@@ -78,9 +79,13 @@ export const ClientsTable = ({ clients, onViewDetail }: ClientsTableProps) => {
                     <div className="w-9 h-9 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
                       {client.user.profilePicture ? (
                         <img
-                          src={client.user.profilePicture}
+                          src={getMediaUrl(client.user.profilePicture)}
                           alt={client.user.name}
                           className="w-9 h-9 rounded-full object-cover"
+                          onError={(e) => {
+                            // Si la imagen falla, ocultar y mostrar iniciales
+                            (e.currentTarget as HTMLImageElement).style.display = "none";
+                          }}
                         />
                       ) : (
                         getInitials(client.user.name, client.user.lastname)
