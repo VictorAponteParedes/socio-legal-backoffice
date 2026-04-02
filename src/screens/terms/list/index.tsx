@@ -5,12 +5,20 @@ import { useTermsList } from "./hooks/useTermsList";
 import { CreateTermModal } from "./components/CreateTermModal";
 import { TermsTable } from "./components/TermsTable";
 import type { Term, TermsTarget } from "../types";
+import { MessageToast } from "@/components/form/MessageToast";
+
+export interface TermMessage {
+  type: "success" | "error";
+  title: string;
+  description: string;
+}
 
 const TermsListPage = () => {
   const [filter, setFilter] = useState<TermsTarget | "all">("all");
   const { terms, isLoading, createTerm, updateExistingTerm, deleteTerm } = useTermsList(filter);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [termToEdit, setTermToEdit] = useState<Term | null>(null);
+  const [message, setMessage] = useState<TermMessage | null>(null);
 
   const handleEdit = (term: Term) => {
     setTermToEdit(term);
@@ -68,17 +76,68 @@ const TermsListPage = () => {
           terms={terms} 
           isLoading={isLoading} 
           onEdit={handleEdit} 
-          onDelete={deleteTerm} 
+          onDelete={async (id) => {
+            try {
+              await deleteTerm(id);
+              setMessage({
+                type: "success",
+                title: "Término eliminado",
+                description: "El término ha sido eliminado correctamente del público seleccionado."
+              });
+            } catch {
+              setMessage({
+                type: "error",
+                title: "Error al eliminar",
+                description: "No se pudo eliminar el término en este momento."
+              });
+            }
+          }} 
         />
       </div>
 
       <CreateTermModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={async (dto) => { await createTerm(dto); }}
-        onUpdate={async (id, dto) => { await updateExistingTerm(id, dto); }}
+        onSubmit={async (dto) => { 
+          try {
+            await createTerm(dto);
+            setMessage({
+              type: "success",
+              title: "Término creado",
+              description: "El nuevo término ha sido añadido exitosamente."
+            });
+          } catch {
+            setMessage({
+              type: "error",
+              title: "Error al crear",
+              description: "Hubo un problema al procesar la creación."
+            });
+            throw new Error();
+          }
+        }}
+        onUpdate={async (id, dto) => { 
+          try {
+            await updateExistingTerm(id, dto);
+            setMessage({
+              type: "success",
+              title: "Término actualizado",
+              description: "Los cambios han sido guardados correctamente."
+            });
+          } catch {
+            setMessage({
+              type: "error",
+              title: "Error al actualizar",
+              description: "No se pudieron guardar los cambios realizados."
+            });
+            throw new Error();
+          }
+        }}
         termToEdit={termToEdit}
       />
+
+      {message && (
+        <MessageToast {...message} onClose={() => setMessage(null)} />
+      )}
     </motion.div>
   );
 };

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Save, Scale, AlertCircle } from "lucide-react";
-import toast from "react-hot-toast";
 import type { CreateTermDto, Term } from "../../types";
 
 interface CreateTermModalProps {
@@ -53,15 +52,12 @@ export const CreateTermModal = ({ isOpen, onClose, onSubmit, onUpdate, termToEdi
     try {
       if (termToEdit && onUpdate) {
         await onUpdate(termToEdit.id, submitData);
-        toast.success("Término actualizado correctamente");
       } else {
         await onSubmit(submitData);
-        toast.success("Término creado correctamente");
       }
       onClose();
     } catch (err: any) {
       setError(err?.message || "Ocurrió un error al guardar el término.");
-      toast.error("Error al guardar");
     } finally {
       setIsSubmitting(false);
     }
