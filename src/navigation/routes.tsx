@@ -17,4 +17,5 @@ export const RoutesView = {
   SETTINGS: "/settings",
   SPECIALIZATIONS: "/admin/abogados/especializaciones",
   TIPS: "/admin/consejos",
+  TERMS: "/admin/terminos",
 };

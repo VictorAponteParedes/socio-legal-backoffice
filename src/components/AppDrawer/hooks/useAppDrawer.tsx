@@ -72,6 +72,11 @@ const NAV_SECTIONS: NavSection[] = [
         path: RoutesView.TIPS,
         icon: <Lightbulb size={20} />,
       },
+      {
+        label: "Términos y Condiciones",
+        path: RoutesView.TERMS,
+        icon: <Scale size={20} />,
+      },
     ],
   },
   {
