@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   UserSquare,
   Scale,
+  Lightbulb,
 } from "lucide-react";
 import { RoutesView } from "@/navigation/routes";
 import type { NavSection } from "../types";
@@ -65,6 +66,11 @@ const NAV_SECTIONS: NavSection[] = [
         label: "Casos",
         path: RoutesView.CASES,
         icon: <FileText size={20} />,
+      },
+      {
+        label: "Consejos del Día",
+        path: RoutesView.TIPS,
+        icon: <Lightbulb size={20} />,
       },
     ],
   },
