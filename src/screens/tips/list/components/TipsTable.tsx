@@ -52,9 +52,6 @@ export const TipsTable = ({ tips, onDelete }: TipsTableProps) => {
               Destinado a
             </th>
             <th className="text-left px-6 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest hidden lg:table-cell">
-              Tipo
-            </th>
-            <th className="text-left px-6 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest hidden lg:table-cell">
               Fecha
             </th>
             <th className="text-right px-6 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest">
@@ -91,17 +88,6 @@ export const TipsTable = ({ tips, onDelete }: TipsTableProps) => {
                   </span>
                 </td>
 
-                {/* Static/Dynamic */}
-                <td className="px-6 py-5 hidden lg:table-cell">
-                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-[11px] font-black border ${
-                    tip.isStatic
-                      ? "bg-purple-50 text-purple-700 border-purple-200"
-                      : "bg-white text-slate-500 border-slate-200"
-                  }`}>
-                    {tip.isStatic ? "Estático" : "Dinámico"}
-                  </span>
-                </td>
-
                 {/* Date */}
                 <td className="px-6 py-5 hidden lg:table-cell">
                   <span className="text-xs text-slate-400 font-semibold">
@@ -121,6 +107,7 @@ export const TipsTable = ({ tips, onDelete }: TipsTableProps) => {
                     title="Eliminar consejo"
                   >
                     <Trash2 size={14} />
+                    Eliminar
                   </button>
                 </td>
               </tr>

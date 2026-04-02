@@ -7,7 +7,6 @@ export interface Tip {
   title: string;
   description: string;
   targetRole: TipTargetRole;
-  isStatic: boolean;
   createdAt: string;
   updatedAt: string;
 }
