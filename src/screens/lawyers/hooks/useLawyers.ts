@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { lawyersService } from "../service/lawyersService";
 import type { Lawyer } from "../types";
+import { useAuth } from "@/store/authStore";
 
 interface UseLawyersState {
   lawyers: Lawyer[];
@@ -10,6 +11,7 @@ interface UseLawyersState {
 }
 
 export const useLawyers = () => {
+  const { token } = useAuth();
   const [state, setState] = useState<UseLawyersState>({
     lawyers: [],
     isLoading: true,
@@ -19,7 +21,7 @@ export const useLawyers = () => {
   const fetchLawyers = useCallback(async () => {
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
     try {
-      const data = await lawyersService.findAll();
+      const data = await lawyersService.findAll(token || undefined);
       setState({ lawyers: data, isLoading: false, error: null });
     } catch (err) {
       setState({
@@ -29,7 +31,7 @@ export const useLawyers = () => {
       });
       console.error("Error fetching lawyers:", err);
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     fetchLawyers();

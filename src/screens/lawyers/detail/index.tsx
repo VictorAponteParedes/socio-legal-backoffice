@@ -2,14 +2,22 @@
 import { useLawyerDetail } from "./hooks/useLawyerDetail";
 import { LawyerSensitiveData } from "./components/LawyerSensitiveData";
 import { StatusBadge } from "@/components/StatusBadge";
-import { ArrowLeft, Mail, MapPin, Briefcase, Star, Calendar, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Mail, MapPin, Briefcase, Star, Calendar, ShieldCheck, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { RoutesView } from "@/navigation/routes";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 const LawyerDetailPage = () => {
-  const { lawyer, isLoading, error } = useLawyerDetail();
+  const { lawyer, isLoading, isUpdatingStatus, error, handleUpdateStatus } = useLawyerDetail();
   const navigate = useNavigate();
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+
+  useEffect(() => {
+    if (lawyer) {
+      setSelectedStatus(lawyer.user.status);
+    }
+  }, [lawyer]);
 
   if (isLoading) return <div className="flex items-center justify-center h-full text-slate-400 font-medium animate-pulse">Cargando perfil...</div>;
   if (error || !lawyer) return <div className="p-8 text-center text-red-500 font-bold">{error || "Perfil no encontrado"}</div>;
@@ -51,9 +59,48 @@ const LawyerDetailPage = () => {
             <p className="text-slate-400 font-mono text-xs mt-2 tracking-widest uppercase font-bold">Matrícula: {lawyer.license}</p>
             
             <div className="mt-6 flex justify-center">
-              <StatusBadge variant={lawyer.isAvailable ? "success" : "neutral"} dot>
-                {lawyer.isAvailable ? "Disponible" : "Inactivo"}
+              <StatusBadge 
+                variant={(lawyer.user.status as string) === "active" ? "success" : (lawyer.user.status as string) === "pending" ? "warning" : (lawyer.user.status as string) === "suspended" ? "error" : "neutral"} 
+                dot
+              >
+                {(lawyer.user.status as string) === "active" ? "Activo" : (lawyer.user.status as string) === "pending" ? "Pendiente" : (lawyer.user.status as string) === "suspended" ? "Suspendido" : "Inactivo"}
               </StatusBadge>
+            </div>
+
+            {/* Select de estado interactivo */}
+            <div className="mt-8 pt-8 border-t border-slate-50 text-left">
+              <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 text-center">
+                Estado de la cuenta
+              </label>
+              <div className="flex gap-2">
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  disabled={isUpdatingStatus}
+                  className={`flex-1 min-w-0 pr-8 pl-4 py-2.5 rounded-xl border appearance-none text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500
+                    ${selectedStatus === "active" ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
+                      selectedStatus === "suspended" ? "bg-red-50 text-red-700 border-red-200" :
+                      selectedStatus === "pending" ? "bg-amber-50 text-amber-700 border-amber-200" :
+                      "bg-slate-100 text-slate-600 border-slate-200"
+                    }`}
+                >
+                  <option value="pending">Pendiente de Aprobación</option>
+                  <option value="active">Activo y Verificado</option>
+                  <option value="inactive">Inactivo temporalmente</option>
+                  <option value="suspended">Cuenta Suspendida</option>
+                </select>
+
+                {selectedStatus !== lawyer.user.status && (
+                  <button
+                    onClick={() => handleUpdateStatus(selectedStatus)}
+                    disabled={isUpdatingStatus}
+                    className="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 rounded-xl transition-all shadow-sm disabled:opacity-50 flex items-center justify-center gap-1.5 font-bold text-sm px-4"
+                  >
+                    <Save size={16} />
+                    Guardar
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mt-8 pt-8 border-t border-slate-50">
