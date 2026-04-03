@@ -1,10 +1,13 @@
 import { axiosInstance } from "@/constants";
-import type { Term, CreateTermDto } from "../types";
+import type { Term, CreateTermDto, PaginatedTerms } from "../types";
 
 export const termsService = {
-  findAll: async (target?: string): Promise<Term[]> => {
-    const params = target && target !== "all" ? { target } : {};
-    const { data } = await axiosInstance.get<Term[]>("/terms-and-conditions", { params });
+  findAll: async (page: number = 1, limit: number = 10, target?: string, search?: string): Promise<PaginatedTerms> => {
+    const params: any = { page, limit };
+    if (target && target !== "all") params.target = target;
+    if (search) params.search = search;
+    
+    const { data } = await axiosInstance.get<PaginatedTerms>("/terms-and-conditions", { params });
     return data;
   },
 

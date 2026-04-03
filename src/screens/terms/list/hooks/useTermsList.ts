@@ -1,16 +1,18 @@
-// src/screens/terms/list/hooks/useTermsList.ts
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useTermsStore } from "../../store/termsStore";
 import { termsService } from "../../service/terms.service";
 import { useAuth } from "@/store/authStore";
 import type { CreateTermDto, TermsTarget } from "../../types";
 
-export const useTermsList = (targetFilter?: TermsTarget | "all") => {
+export const useTermsList = (search: string, targetFilter?: TermsTarget | "all") => {
+  const [currentPage, setCurrentPage] = useState(1);
   const {
     terms,
+    total,
+    totalPages,
     isLoading,
     error,
-    setTerms,
+    setTermsData,
     addTerm,
     updateTerm,
     removeTerm,
@@ -24,18 +26,28 @@ export const useTermsList = (targetFilter?: TermsTarget | "all") => {
     setLoading(true);
     setError(null);
     try {
-      const data = await termsService.findAll(targetFilter);
-      setTerms(data);
+      const data = await termsService.findAll(currentPage, 10, targetFilter, search);
+      setTermsData({
+        terms: data.data,
+        total: data.total,
+        page: data.page,
+        totalPages: data.totalPages
+      });
     } catch {
       setError("Error al cargar los términos y condiciones.");
     } finally {
       setLoading(false);
     }
-  }, [token, targetFilter, setLoading, setError, setTerms]);
+  }, [token, currentPage, targetFilter, search, setLoading, setError, setTermsData]);
 
   useEffect(() => {
     fetchTerms();
   }, [fetchTerms]);
+
+  // Reset to page 1 when search or filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, targetFilter]);
 
   const createTerm = async (dto: CreateTermDto) => {
     if (!token) return;
@@ -77,6 +89,10 @@ export const useTermsList = (targetFilter?: TermsTarget | "all") => {
 
   return {
     terms,
+    totalTerms: total,
+    totalPages,
+    currentPage,
+    setPage: setCurrentPage,
     isLoading,
     error,
     createTerm,

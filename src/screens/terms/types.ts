@@ -18,3 +18,11 @@ export interface CreateTermDto {
   target: TermsTarget;
   order?: number;
 }
+
+export interface PaginatedTerms {
+  data: Term[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}

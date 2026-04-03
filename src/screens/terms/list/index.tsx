@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Filter } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTermsList } from "./hooks/useTermsList";
 import { CreateTermModal } from "./components/CreateTermModal";
 import { TermsTable } from "./components/TermsTable";
+import { TermsSearchBar } from "./components/TermsSearchBar";
 import type { Term, TermsTarget } from "../types";
 import { MessageToast } from "@/components/form/MessageToast";
 
@@ -14,8 +15,20 @@ export interface TermMessage {
 }
 
 const TermsListPage = () => {
+  const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<TermsTarget | "all">("all");
-  const { terms, isLoading, createTerm, updateExistingTerm, deleteTerm } = useTermsList(filter);
+  const { 
+    terms, 
+    totalTerms, 
+    totalPages, 
+    currentPage, 
+    setPage, 
+    isLoading, 
+    createTerm, 
+    updateExistingTerm, 
+    deleteTerm 
+  } = useTermsList(search, filter);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [termToEdit, setTermToEdit] = useState<Term | null>(null);
   const [message, setMessage] = useState<TermMessage | null>(null);
@@ -28,6 +41,13 @@ const TermsListPage = () => {
   const handleCreate = () => {
     setTermToEdit(null);
     setIsModalOpen(true);
+  };
+
+  const hasActiveFilters = search !== "" || filter !== "all";
+
+  const clearFilters = () => {
+    setSearch("");
+    setFilter("all");
   };
 
   return (
@@ -53,25 +73,17 @@ const TermsListPage = () => {
         </button>
       </div>
 
-      {/* Filter and Content section */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-slate-50 rounded-xl text-slate-400">
-              <Filter size={18} />
-            </div>
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value as TermsTarget | "all")}
-              className="bg-slate-50 border border-slate-100 text-slate-700 text-sm rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 block p-2.5 font-bold outline-none cursor-pointer"
-            >
-              <option value="all">Todos los términos</option>
-              <option value="client">Solo para Clientes</option>
-              <option value="lawyer">Solo para Abogados</option>
-            </select>
-          </div>
-        </div>
+      <TermsSearchBar
+        search={search}
+        onSearchChange={setSearch}
+        targetFilter={filter}
+        onTargetChange={setFilter}
+        hasActiveFilters={hasActiveFilters}
+        onClearFilters={clearFilters}
+      />
 
+      {/* Content section */}
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
         <TermsTable 
           terms={terms} 
           isLoading={isLoading} 
@@ -93,6 +105,51 @@ const TermsListPage = () => {
             }
           }} 
         />
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50">
+            <span className="text-sm font-medium text-slate-500">
+              Página <span className="text-slate-700 font-bold">{currentPage}</span> de <span className="text-slate-700 font-bold">{totalPages}</span>
+              <span className="ml-2 text-slate-400">({totalTerms} términos en total)</span>
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="p-2 rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              
+              <div className="flex gap-1">
+                {[...Array(totalPages)].map((_, i) => {
+                  const page = i + 1;
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setPage(page)}
+                      className={`w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition-colors ${
+                        currentPage === page
+                          ? "bg-indigo-600 text-white shadow-sm"
+                          : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <CreateTermModal
