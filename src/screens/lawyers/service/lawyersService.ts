@@ -45,6 +45,26 @@ export class LawyersService {
     );
     return response.data;
   }
+
+  async getLawyerChats(userId: string, token: string): Promise<any[]> {
+    const response = await axiosInstance.get<any[]>(
+      `/chats/admin/user/${userId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    return response.data;
+  }
+
+  async getChatAudit(chatId: number, token: string): Promise<any> {
+    const response = await axiosInstance.get<any>(
+      `/chats/${chatId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    return response.data;
+  }
 }
 
 export const lawyersService = new LawyersService();

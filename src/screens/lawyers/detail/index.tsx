@@ -1,17 +1,19 @@
 // src/screens/lawyers/detail/index.tsx
 import { useLawyerDetail } from "./hooks/useLawyerDetail";
 import { LawyerSensitiveData } from "./components/LawyerSensitiveData";
+import { LawyerChats } from "./components/LawyerChats";
 import { StatusBadge } from "@/components/StatusBadge";
-import { ArrowLeft, Mail, MapPin, Briefcase, Star, Calendar, ShieldCheck, Save } from "lucide-react";
+import { ArrowLeft, Mail, MapPin, Briefcase, Star, Calendar, ShieldCheck, Save, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { RoutesView } from "@/navigation/routes";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 const LawyerDetailPage = () => {
-  const { lawyer, isLoading, isUpdatingStatus, error, handleUpdateStatus } = useLawyerDetail();
+  const { lawyer, chats, isLoading, isLoadingChats, isUpdatingStatus, error, handleUpdateStatus } = useLawyerDetail();
   const navigate = useNavigate();
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<"profile" | "chats">("profile");
 
   useEffect(() => {
     if (lawyer) {
@@ -29,7 +31,7 @@ const LawyerDetailPage = () => {
       className="max-w-6xl mx-auto space-y-8 pb-10"
     >
       {/* Header Action */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <button 
           onClick={() => navigate(RoutesView.LAWYERS)}
           className="flex items-center gap-2 text-slate-400 hover:text-indigo-600 transition-all font-bold text-sm group"
@@ -39,10 +41,36 @@ const LawyerDetailPage = () => {
           </div>
           Volver al listado
         </button>
+
+        {/* Tab Selector premium */}
+        <div className="flex bg-slate-100 p-1.5 rounded-2xl shadow-inner border border-slate-200 w-full sm:w-auto">
+          <button
+            onClick={() => setActiveTab("profile")}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-sm font-bold transition-all ${
+              activeTab === "profile" 
+                ? "bg-white text-indigo-600 shadow-sm" 
+                : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
+            }`}
+          >
+            <Briefcase size={16} />
+            Perfil Profesional
+          </button>
+          <button
+            onClick={() => setActiveTab("chats")}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-sm font-bold transition-all ${
+              activeTab === "chats" 
+                ? "bg-white text-indigo-600 shadow-sm" 
+                : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
+            }`}
+          >
+            <MessageSquare size={16} />
+            Chats y Clientes
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Card de Perfil (Izquierda) */}
+        {/* Card de Perfil (Izquierda) - Siempre visible */}
         <div className="lg:col-span-4 space-y-6">
           <div className="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm text-center relative overflow-hidden group">
             {/* Decoración sutil */}
@@ -138,41 +166,57 @@ const LawyerDetailPage = () => {
           </div>
         </div>
 
-        {/* Detalles Técnicos y Sensibles (Derecha) */}
+        {/* Detalles Dinámicos (Derecha) */}
         <div className="lg:col-span-8 space-y-8">
-          {/* Sección de Datos Sensibles */}
-          <LawyerSensitiveData />
+          {activeTab === "profile" ? (
+             <motion.div
+               key="profile-tab"
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0 }}
+               className="space-y-8"
+             >
+                <LawyerSensitiveData />
 
-          {/* Perfil Profesional */}
-          <div className="bg-white rounded-4xl border border-slate-100 p-8 shadow-sm">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500">
-                <Briefcase size={20} />
-              </div>
-              <div>
-                <h3 className="text-lg font-black text-slate-800 tracking-tight">Perfil Profesional</h3>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Resumen curricular</p>
-              </div>
-            </div>
-            
-            <div className="bg-slate-50 rounded-2xl p-6 border-l-4 border-indigo-500">
-              <p className="text-slate-600 text-[15px] leading-relaxed font-medium italic">
-                "{lawyer.bio || "Este profesional aún no ha proporcionado una biografía detallada para su perfil."}"
-              </p>
-            </div>
-
-            <div className="mt-10">
-              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Especialidades Certificadas</h4>
-              <div className="flex flex-wrap gap-2">
-                {lawyer.specializations.map(s => (
-                  <div key={s.id} className="px-5 py-2.5 bg-white border border-slate-100 rounded-2xl text-xs font-black text-indigo-600 shadow-xs flex items-center gap-2.5 hover:border-indigo-200 transition-colors group">
-                    <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 group-hover:scale-125 transition-transform" />
-                    {s.name}
+                {/* Perfil Profesional */}
+                <div className="bg-white rounded-4xl border border-slate-100 p-8 shadow-sm">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500">
+                      <Briefcase size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-black text-slate-800 tracking-tight">Perfil Profesional</h3>
+                      <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Resumen curricular</p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
+                  
+                  <div className="bg-slate-50 rounded-2xl p-6 border-l-4 border-indigo-500">
+                    <p className="text-slate-600 text-[15px] leading-relaxed font-medium italic">
+                      "{lawyer.bio || "Este profesional aún no ha proporcionado una biografía detallada para su perfil."}"
+                    </p>
+                  </div>
+
+                  <div className="mt-10">
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Especialidades Certificadas</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {lawyer.specializations.map(s => (
+                        <div key={s.id} className="px-5 py-2.5 bg-white border border-slate-100 rounded-2xl text-xs font-black text-indigo-600 shadow-xs flex items-center gap-2.5 hover:border-indigo-200 transition-colors group">
+                          <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 group-hover:scale-125 transition-transform" />
+                          {s.name}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+             </motion.div>
+          ) : (
+             <motion.div
+               key="chats-tab"
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0 }}
+             >
+                <LawyerChats chats={chats} isLoading={isLoadingChats} />
+             </motion.div>
+          )}
         </div>
       </div>
     </motion.div>
