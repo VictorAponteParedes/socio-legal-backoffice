@@ -2,24 +2,63 @@
 import { useLawyerDetail } from "./hooks/useLawyerDetail";
 import { LawyerSensitiveData } from "./components/LawyerSensitiveData";
 import { LawyerChats } from "./components/LawyerChats";
+import { AuditSecurityModal } from "./components/AuditSecurityModal";
 import { StatusBadge } from "@/components/StatusBadge";
-import { ArrowLeft, Mail, MapPin, Briefcase, Star, Calendar, ShieldCheck, Save, MessageSquare } from "lucide-react";
+import { ArrowLeft, Mail, MapPin, Briefcase, Star, Calendar, ShieldCheck, Save, MessageSquare, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { RoutesView } from "@/navigation/routes";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { lawyersService } from "../service/lawyersService";
+import { useAuth } from "@/store/authStore";
 
 const LawyerDetailPage = () => {
   const { lawyer, chats, isLoading, isLoadingChats, isUpdatingStatus, error, handleUpdateStatus } = useLawyerDetail();
   const navigate = useNavigate();
+  const { token } = useAuth();
+  
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [activeTab, setActiveTab] = useState<"profile" | "chats">("profile");
+  
+  // Seguridad de Auditoría
+  const [isAuditUnlocked, setIsAuditUnlocked] = useState(false);
+  const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [securityError, setSecurityError] = useState("");
 
   useEffect(() => {
     if (lawyer) {
       setSelectedStatus(lawyer.user.status);
     }
   }, [lawyer]);
+
+  const handleTabChange = (tab: "profile" | "chats") => {
+    if (tab === "chats" && !isAuditUnlocked) {
+      setIsSecurityModalOpen(true);
+      return;
+    }
+    setActiveTab(tab);
+  };
+
+  const handleVerifyPassword = async (password: string) => {
+    if (!token) return;
+    setIsVerifying(true);
+    setSecurityError("");
+    try {
+      const isValid = await lawyersService.verifyAuditPassword(password, token);
+      if (isValid) {
+        setIsAuditUnlocked(true);
+        setIsSecurityModalOpen(false);
+        setActiveTab("chats");
+      } else {
+        setSecurityError("Contraseña de auditoría incorrecta.");
+      }
+    } catch {
+      setSecurityError("Error al verificar la seguridad.");
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   if (isLoading) return <div className="flex items-center justify-center h-full text-slate-400 font-medium animate-pulse">Cargando perfil...</div>;
   if (error || !lawyer) return <div className="p-8 text-center text-red-500 font-bold">{error || "Perfil no encontrado"}</div>;
@@ -45,7 +84,7 @@ const LawyerDetailPage = () => {
         {/* Tab Selector premium */}
         <div className="flex bg-slate-100 p-1.5 rounded-2xl shadow-inner border border-slate-200 w-full sm:w-auto">
           <button
-            onClick={() => setActiveTab("profile")}
+            onClick={() => handleTabChange("profile")}
             className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-sm font-bold transition-all ${
               activeTab === "profile" 
                 ? "bg-white text-indigo-600 shadow-sm" 
@@ -56,14 +95,21 @@ const LawyerDetailPage = () => {
             Perfil Profesional
           </button>
           <button
-            onClick={() => setActiveTab("chats")}
+            onClick={() => handleTabChange("chats")}
             className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-sm font-bold transition-all ${
               activeTab === "chats" 
                 ? "bg-white text-indigo-600 shadow-sm" 
                 : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
             }`}
           >
-            <MessageSquare size={16} />
+            <div className="relative">
+               <MessageSquare size={16} />
+               {!isAuditUnlocked && (
+                 <div className="absolute -top-1.5 -right-1.5 text-[8px] bg-red-500 text-white p-0.5 rounded-full border border-white">
+                   <Lock size={8} />
+                 </div>
+               )}
+            </div>
             Chats y Clientes
           </button>
         </div>
@@ -219,6 +265,14 @@ const LawyerDetailPage = () => {
           )}
         </div>
       </div>
+
+      <AuditSecurityModal 
+        isOpen={isSecurityModalOpen}
+        onClose={() => setIsSecurityModalOpen(false)}
+        onConfirm={handleVerifyPassword}
+        isVerifying={isVerifying}
+        error={securityError}
+      />
     </motion.div>
   );
 };

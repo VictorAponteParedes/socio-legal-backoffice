@@ -65,6 +65,17 @@ export class LawyersService {
     );
     return response.data;
   }
+
+  async verifyAuditPassword(password: string, token: string): Promise<boolean> {
+    const response = await axiosInstance.post<{ valid: boolean }>(
+      "/chats/admin/verify-audit-password",
+      { password },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    return response.data.valid;
+  }
 }
 
 export const lawyersService = new LawyersService();
