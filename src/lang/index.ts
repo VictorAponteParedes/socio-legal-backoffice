@@ -1,4 +1,4 @@
-import Login from "./es/login.json";
+import Login from "./es/Login.json";
 
 // Definir el idioma actual, por ejemplo, 'es' para español
 const currentLanguage = "es";
