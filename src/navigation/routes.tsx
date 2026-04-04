@@ -18,4 +18,5 @@ export const RoutesView = {
   SPECIALIZATIONS: "/admin/abogados/especializaciones",
   TIPS: "/admin/consejos",
   TERMS: "/admin/terminos",
+  REGISTRY: "/admin/registro-abogados",
 };

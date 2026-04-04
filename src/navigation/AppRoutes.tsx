@@ -13,6 +13,7 @@ import { USERS_ROUTES } from "../screens/users/routes";
 import { SPECIALIZATIONS_ROUTES } from "../screens/specializations/routes";
 import { TIPS_ROUTES } from "../screens/tips/routes";
 import { TERMS_ROUTES } from "../screens/terms/routes";
+import { REGISTRY_ROUTES } from "../screens/registry/routes";
 
 // Todas las rutas privadas (con lazy + ProtectedRoute automático)
 const PRIVATE_ROUTES = [
@@ -24,6 +25,7 @@ const PRIVATE_ROUTES = [
   ...SPECIALIZATIONS_ROUTES,
   ...TIPS_ROUTES,
   ...TERMS_ROUTES,
+  ...REGISTRY_ROUTES,
 ];
 
 import { PrivateLayout } from "./PrivateLayout";

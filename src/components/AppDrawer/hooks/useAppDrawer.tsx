@@ -77,6 +77,11 @@ const NAV_SECTIONS: NavSection[] = [
         path: RoutesView.TERMS,
         icon: <Scale size={20} />,
       },
+      {
+        label: "Padrón Judicial",
+        path: RoutesView.REGISTRY,
+        icon: <ShieldCheck size={20} />,
+      },
     ],
   },
   {
